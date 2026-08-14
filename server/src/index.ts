@@ -3,6 +3,7 @@ import { Hono } from 'hono';
 import { connectDB } from './db.js';
 import { cors } from 'hono/cors';
 import { auth } from './auth/auth.js';
+import { articlesRoutes } from './articles/articles.routes.js';
 
 const app = new Hono();
 // Permitimos hablar con el Hono y enviar cookies
@@ -23,6 +24,9 @@ app.on(['POST','GET'], '/api/auth/**',(c) =>{
 app.get('/api/health', (c) => {
   return c.json({ status: 'ok', message: 'Servidor Hono esta funcionando correctamente' });
 });
+
+// Ruta de CRUD de articulos
+app.route('/api/articles', articlesRoutes);
 
 const port = Number(process.env.PORT) || 3000;
 
