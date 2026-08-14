@@ -1,0 +1,15 @@
+# Dependencias (NUNCA subir a Git)
+node_modules/
+
+# Archivos de compilación / build
+dist/
+.vite/
+
+# Variables de entorno con contraseñas o URIs privadas
+.env
+.env.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
