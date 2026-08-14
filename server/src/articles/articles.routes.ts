@@ -22,6 +22,70 @@ type Env = {
 // TypeScript va a saber exactamente qué propiedades tiene user y no va a tirar error
 export const articlesRoutes = new Hono<Env>();
 
+//! ======================
+// ! ---RUTAS PUBLICA---
+//! ======================
+// --- BUSCADOR PUBLICO DE ARTICULOS -GET ---
+articlesRoutes.get('/public/search', async (c) => {// escucha la peticion GET
+  //guadamos en query lo que el usuario excribio en el buscador
+  const query = c.req.query('q') || '';
+
+  //usamos un operador ternario para ver si query tiene un texto, osea si el usuario escribio algo
+  const filter = query
+    ? { 
+        $or: [ //traermos los articulos que almenos cumpla estas 3 condiciones
+          { title: { $regex: query, $options: 'i' } },
+          { content: { $regex: query, $options: 'i' } },
+          { authorName: { $regex: query, $options: 'i' } },
+        ],
+      }
+    : {}; // sino escrbio nada no va a filtrar nada
+  
+  // consultamos con la DB sobre los articulos, con el filtro que el usuario escribio, luego ordernar los resultado en orden decreciente, y convertir la respuesta en un array
+  const articles = await db
+    .collection('articles')
+    .find(filter)
+    .sort({ createdAt: -1 })
+    .toArray();
+
+  // como nos devolvio en un array los articulos lo retornamos en formato json
+  return c.json(articles);
+});
+
+// --- LISTA PUBLICA DE AUTORES Y CANTIDAD DE ARTICULOS ---
+articlesRoutes.get('/public/authors', async (c) => { // escucha la peticion GET
+
+  const authors = await db
+    // Usamos .aggregate() para procesar los artículos de la DB
+    // usamos $group para junta todos los artículos por el ID de autor y cuenta cuántos hay
+    // usamos $project para darle un formato limpio a la respuesta final y lo devolvemos en una array 
+    .collection('articles')
+    .aggregate([
+      {
+        $group: {
+          _id: '$authorId',
+          authorName: { $first: '$authorName' },
+          totalArticles: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          authorId: '$_id',
+          authorName: 1,
+          totalArticles: 1,
+        },
+      },
+    ])
+    .toArray();
+
+  return c.json(authors);
+});
+
+//! ======================
+//! ---RUTAS PRIVADA---
+//! ======================
+
 // Aplicamos el requireAuth de autenticación a todas las rutas de artículos, para saber si el usuario esta logueado
 articlesRoutes.use('*', requireAuth);
 
@@ -51,7 +115,6 @@ articlesRoutes.post('/', zValidator('json', createArticleSchema), async (c) => {
 
 //-----OBTENER ARTÍCULOS PROPIOS-GET----
 articlesRoutes.get('/', async (c) => {
-
   const user = c.get('user');
 
   const page = Number(c.req.query('page')) || 1;
