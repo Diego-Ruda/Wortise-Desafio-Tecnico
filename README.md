@@ -133,7 +133,16 @@ cp .env.example .env
 mongod
 ```
 
+### 5. Subir el seed
 
+```bash
+cd server
+npm run seed 
+```
+en caso de elimina todos los datos
+```bash
+npm run cleanup
+```
 ### 5. Ejecutar la aplicación
 
 Desde la raíz:
@@ -214,9 +223,5 @@ cd server && npm run build
 
 ## Estados de carga, error y vacío
 
-Se contemplaron especialmente:
 
-- estados de carga mientras se consultan artículos, autores y búsquedas;
-- estados de error cuando falla una petición a la API;
-- estados vacíos para usuarios sin publicaciones o búsquedas sin resultados.
 
