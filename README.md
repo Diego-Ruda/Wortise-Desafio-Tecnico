@@ -229,6 +229,7 @@ npm run build:server
 - **Paleta visual**: definida con variables CSS para soportar diseño claro y oscuro con una experiencia visual consistente.
 
 
-
+## Enlace a la aplicación
+* **Aplicación desplegada:** https://wortise-desafio-tecnico-client-mu.vercel.app
 
 
