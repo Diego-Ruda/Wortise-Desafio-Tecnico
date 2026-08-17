@@ -1,11 +1,14 @@
-{
+﻿{
   "name": "server",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "tsx watch src/index.ts"
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc --noEmit",
+    "start": "node dist/index.js",
+    "seed": "tsx src/seed.ts",
+    "cleanup": "tsx src/cleanup.ts"
   },
   "keywords": [],
   "author": "",
@@ -14,13 +17,16 @@
   "dependencies": {
     "@hono/node-server": "^2.1.0",
     "@hono/zod-validator": "^0.9.0",
+    "bcryptjs": "^2.4.3",
     "better-auth": "^1.6.28",
     "dotenv": "^17.4.2",
     "hono": "^4.13.2",
     "mongodb": "^7.5.0",
-    "zod": "^4.4.3"
+    "zod": "^4.4.3",
+    "wortise-shared": "file:../shared"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.2",
     "@types/node": "^26.2.0",
     "tsx": "^4.23.12",
     "typescript": "^7.0.2"

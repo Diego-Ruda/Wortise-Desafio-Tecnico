@@ -29,6 +29,9 @@ export const articlesRoutes = new Hono<Env>();
 articlesRoutes.get('/public/search', async (c) => {// escucha la peticion GET
   //guadamos en query lo que el usuario excribio en el buscador
   const query = c.req.query('q') || '';
+  const page = Number(c.req.query('page')) || 1; //ponemos el limite de articulo para cada pagina
+  const limit = Number(c.req.query('limit')) || 6;
+  const skip = (page - 1) * limit;
 
   //usamos un operador ternario para ver si query tiene un texto, osea si el usuario escribio algo
   const filter = query
@@ -42,14 +45,25 @@ articlesRoutes.get('/public/search', async (c) => {// escucha la peticion GET
     : {}; // sino escrbio nada no va a filtrar nada
   
   // consultamos con la DB sobre los articulos, con el filtro que el usuario escribio, luego ordernar los resultado en orden decreciente, y convertir la respuesta en un array
-  const articles = await db
-    .collection('articles')
-    .find(filter)
-    .sort({ createdAt: -1 })
-    .toArray();
+  const [articles, total] = await Promise.all([
+    db
+      .collection('articles')
+      .find(filter)
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
+      .toArray(),
+    db.collection('articles').countDocuments(filter),
+  ]);
 
   // como nos devolvio en un array los articulos lo retornamos en formato json
-  return c.json(articles);
+  return c.json({
+    articles,
+    total,
+    page,
+    limit,
+    totalPages: Math.ceil(total / limit),
+  });
 });
 
 // --- LISTA PUBLICA DE AUTORES Y CANTIDAD DE ARTICULOS ---
@@ -80,6 +94,57 @@ articlesRoutes.get('/public/authors', async (c) => { // escucha la peticion GET
     .toArray();
 
   return c.json(authors);
+});
+
+// ----OBTENER EL DETALLE DE UN ARTÍCULO-GET----
+articlesRoutes.get('/:id', async (c) => {
+  // extraemos la id
+  const id = c.req.param('id');
+
+  //validamos la id
+  if (!ObjectId.isValid(id)) {
+    return c.json({ error: 'ID de artículo inválido' }, 400);
+  }
+
+  //buscamos el articulo en la DB
+  const article = await db.collection('articles').findOne({ _id: new ObjectId(id) });
+
+  //cuando terminamos de buscar el artcilo lo validamos si existe el articulo
+  if (!article) {
+    return c.json({ error: 'Artículo no encontrado' }, 404);
+  }
+
+  //retornamos el articulo
+  return c.json(article);
+});
+
+// --- ARTICULOS PÚBLICOS POR AUTOR (CON PAGINACIÓN) - GET ---
+articlesRoutes.get('/public/author/:authorId', async (c) => {
+  const authorId = c.req.param('authorId');
+  const page = Number(c.req.query('page')) || 1;
+  const limit = Number(c.req.query('limit')) || 5;
+  const skip = (page - 1) * limit;
+
+  const filter = { authorId };
+
+  const [articles, total] = await Promise.all([
+    db
+      .collection('articles')
+      .find(filter)
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
+      .toArray(),
+    db.collection('articles').countDocuments(filter),
+  ]);
+
+  return c.json({
+    articles,
+    total,
+    page,
+    limit,
+    totalPages: Math.ceil(total / limit),
+  });
 });
 
 //! ======================
@@ -118,13 +183,11 @@ articlesRoutes.get('/', async (c) => {
   const user = c.get('user');
 
   const page = Number(c.req.query('page')) || 1;
-  const limit = Number(c.req.query('limit')) || 5;
+  const limit = Number(c.req.query('limit')) || 4;
   const skip = (page - 1) * limit;
 
-  //define la id para luego buscar con el mongoDB.
   const query = { authorId: user.id }; 
 
-  // consulta a mongodb
   const [articles, total] = await Promise.all([
     db
       .collection('articles')
@@ -136,39 +199,15 @@ articlesRoutes.get('/', async (c) => {
     db.collection('articles').countDocuments(query),
   ]);
 
-  //retorna los articulos y la informacion de la paginacion
   return c.json({
     articles,
-    pagination: {
-      total,
-      page,
-      limit,
-      totalPages: Math.ceil(total / limit),
-    },
+    total,
+    page,
+    limit,
+    totalPages: Math.ceil(total / limit),
   });
 });
 
-// ----OBTENER EL DETALLE DE UN ARTÍCULO-GET----
-articlesRoutes.get('/:id', async (c) => {
-  // extraemos la id
-  const id = c.req.param('id');
-
-  //validamos la id
-  if (!ObjectId.isValid(id)) {
-    return c.json({ error: 'ID de artículo inválido' }, 400);
-  }
-
-  //buscamos el articulo en la DB
-  const article = await db.collection('articles').findOne({ _id: new ObjectId(id) });
-
-  //cuando terminamos de buscar el artcilo lo validamos si existe el articulo
-  if (!article) {
-    return c.json({ error: 'Artículo no encontrado' }, 404);
-  }
-
-  //retornamos el articulo
-  return c.json(article);
-});
 
 //---EDITAR UN ARTÍCULO PROPIO-PUT---
 articlesRoutes.put('/:id', zValidator('json', updateArticleSchema), async (c) => { //validamos los datos y la URL

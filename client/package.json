@@ -10,14 +10,27 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@heroui/react": "^3.2.4",
+    "@heroui/styles": "^3.2.4",
+    "@tailwindcss/vite": "^4.3.3",
+    "@tanstack/react-form": "^1.33.5",
+    "@tanstack/react-query": "^5.101.4",
+    "@tanstack/react-router": "^1.170.28",
+    "better-auth": "^1.6.29",
+    "framer-motion": "^13.1.0",
     "react": "^19.2.8",
-    "react-dom": "^19.2.8"
+    "react-dom": "^19.2.8",
+    "react-router-dom": "^7.18.2",
+    "tailwindcss": "^4.3.3",
+    "zod": "^4.4.3",
+    "wortise-shared": "file:../shared"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@types/node": "^24.13.3",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
+    "@types/react-router-dom": "^5.3.3",
     "@vitejs/plugin-react": "^6.0.4",
     "eslint": "^10.8.0",
     "eslint-plugin-react-hooks": "^7.1.1",

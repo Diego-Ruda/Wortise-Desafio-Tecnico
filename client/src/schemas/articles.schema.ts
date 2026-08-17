@@ -1,4 +1,4 @@
-// exportar schemas desde shared para mantener compatibilidad
+// Re-exportar schemas desde shared para compatibilidad con código existente
 export {
   createArticleSchema,
   updateArticleSchema,

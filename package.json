@@ -1,0 +1,22 @@
+{
+  "name": "wortise-monorepo",
+  "version": "1.0.0",
+  "description": "Wortise - Technical Challenge (Monorepo)",
+  "private": true,
+  "workspaces": [
+    "shared",
+    "client",
+    "server"
+  ],
+  "scripts": {
+    "dev:client": "cd client && npm run dev",
+    "dev:server": "cd server && npm run dev",
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "build": "npm run build --workspace shared && npm run build --workspace client && npm run build --workspace server",
+    "build:client": "npm run build --workspace client",
+    "build:server": "npm run build --workspace server"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
