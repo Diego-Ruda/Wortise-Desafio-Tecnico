@@ -7,8 +7,8 @@
     "dev": "tsx watch src/index.ts",
     "build": "tsc --noEmit",
     "start": "node dist/index.js",
-    "seed": "tsx src/seed.ts",
-    "cleanup": "tsx src/cleanup.ts"
+    "seed": "tsx src/Seed/seed.ts",
+    "cleanup": "tsx src/Seed/cleanup.ts"
   },
   "keywords": [],
   "author": "",
