@@ -11,7 +11,7 @@ export interface UserData {
 }
 
 export const sampleUsers: UserData[] = [
-  { name: "Alice Johnson", email: "alice@gmail.com", password: "contraseña123!" },
+  { name: "Alice Johnson", email: "   ", password: "contraseña123!" },
   { name: "Bob Smith", email: "bob@gmail.com", password: "contraseña123!" },
   { name: "Carol Williams", email: "carol@gmail.com", password: "contraña123!" },
 ];

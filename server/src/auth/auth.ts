@@ -24,6 +24,18 @@ export const auth = betterAuth({
     enabled: true,
   },
   trustedOrigins,
+  advanced: {
+    useSecureCookies: true,
+    cookies: {
+      session_token: {
+        attributes: {
+          sameSite: "none",
+          secure: true,
+          httpOnly: true,
+        },
+      },
+    },
+  },
   databaseHooks: {
     user: {
       create: {
