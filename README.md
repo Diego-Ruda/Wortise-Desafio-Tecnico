@@ -205,7 +205,7 @@ VITE_API_URL=http://localhost:3000
 
 ## Scripts disponibles
 
-Desde la raíz del proyecto:
+Desde la raíz del proyecto (resumen):
 
 ```bash
 npm run dev
@@ -216,18 +216,9 @@ npm run build:client
 npm run build:server
 ```
 
-Desde cada workspace:
-
-```bash
-cd client && npm run dev
-cd client && npm run build
-cd server && npm run dev
-cd server && npm run build
-```
-
 ---
 
-## Decisiones técnicas
+## Consideraciones de proyecto
 
 - **Monorepo con client, server y shared**: Aunque no se menciono en la prueba tecnica se meciono en la postulacion asi que añadi el monorepo con lo que permitio centralizar los schemas de Zod y evitar duplicación entre frontend y backend.
 - **Better Auth**: se usa para manejar registro, login, logout y protección de sesiones.
