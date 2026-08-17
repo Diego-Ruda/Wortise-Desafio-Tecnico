@@ -112,7 +112,7 @@ Instala también los workspaces del monorepo de: (`client`, `server` y `shared`)
 
 #### Backend
 
-En la raíz del proyecto:
+Dentro de la carpeta `server`:
 
 ```bash
 cp .env.example .env
@@ -134,7 +134,7 @@ mongod
 ```
 
 ### 5. Subir el seed
-
+Dentro de la carpeta `server`:
 ```bash
 cd server
 npm run seed 
@@ -143,7 +143,7 @@ en caso de elimina todos los datos
 ```bash
 npm run cleanup
 ```
-### 5. Ejecutar la aplicación
+### 6. Ejecutar la aplicación
 
 Desde la raíz:
 
@@ -162,8 +162,26 @@ También podés correr cada parte por separado:
 npm run dev:server
 npm run dev:client
 ```
-
 ---
+
+## Build y ejecución en producción
+
+Para compilar el proyecto y verificar el funcionamiento del código generado en producción localmente:
+
+### 1. Compilar proyectos (Frontend y Backend)
+
+Desde la raíz del proyecto:
+
+```bash
+npm run build
+```
+### 2. Iniciar el servidor compilado
+
+Desde la raíz del proyecto:
+
+```bash
+npm run start
+```
 
 ## Variables de entorno
 
@@ -172,7 +190,7 @@ npm run dev:client
 ```bash
 PORT=3000
 MONGODB_URI=mongodb://localhost:27017/nombre-de-tu-db
-BETTER_AUTH_SECRET=tu_secreto_aqui_muy_largo
+BETTER_AUTH_SECRET=clave_secreto_aqui_muy_largo
 BETTER_AUTH_URL=http://localhost:3000
 BETTER_AUTH_TRUSTED_ORIGINS=http://localhost:5173
 CLIENT_URL=http://localhost:5173
@@ -219,9 +237,7 @@ cd server && npm run build
 - **MongoDB**: persistencia nativa del driver de MongoDB.
 - **Paleta visual**: definida con variables CSS para soportar diseño claro y oscuro con una experiencia visual consistente.
 
----
 
-## Estados de carga, error y vacío
 
 
 

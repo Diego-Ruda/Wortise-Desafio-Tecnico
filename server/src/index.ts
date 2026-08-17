@@ -7,8 +7,7 @@ import { connectDB } from "./db.js";
 import { auth } from "./auth/auth.js";
 import { articlesRoutes } from "./articles/articles.routes.js";
 
-const envPath = path.resolve(process.cwd(), "..", ".env");
-dotenv.config({ path: envPath });
+
 dotenv.config();
 
 const FRONTEND_URL = process.env.CLIENT_URL || "http://localhost:5173";

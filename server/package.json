@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "build": "tsc --noEmit",
+    "build": "tsc",
     "start": "node dist/index.js",
     "seed": "tsx src/Seed/seed.ts",
     "cleanup": "tsx src/Seed/cleanup.ts"
